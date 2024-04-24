@@ -1,0 +1,710 @@
+1. Buatlah database baru dengan nama: dbpegawai
+jawaban no 1 ; 
+MariaDB [(none)]> create database dbpegawai
+    -> ;
+Query OK, 1 row affected (0.002 sec)
+
+2. masuk ke dbpegawai dengan dengan perintah use :
+jawaban no 2: 
+MariaDB [(none)]> use dbpegawai
+Database changed
+
+
+3. Buatlah tabel baru dengan nama: divisi, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nama varchar(30) dengan contraint: wajib diisi dan tidak boleh sama
+jawaban no 3 :
+MariaDB [dbpegawai]> create table divisi( id int primary key auto_increment, nama varchar(30) not null, constraint unique_nama unique(nama));
+Query OK, 0 rows affected (0.014 sec)
+
+4.Tampilkan deskripsi tabel divisi
+Jawaban no 4 :
+MariaDB [dbpegawai]> desc divisi;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.007 sec)
+
+5.Buatlah tabel baru dengan nama: jabatan, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nama varchar(30) dengan contraint: wajib diisi dan tidak boleh sama
+jawaban no 5 :
+MariaDB [dbpegawai]> CREATE TABLE jabatan (
+    ->     id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     nama VARCHAR(30) NOT NULL,
+    ->     CONSTRAINT unique_nama UNIQUE (nama)
+    -> );
+Query OK, 0 rows affected (0.015 sec)
+
+6. Tampilkan deskripsi tabel jabatan
+jawaban no 6 :
+MariaDB [dbpegawai]> desc jabatan;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.006 sec)
+
+7.Buatlah tabel baru dengan nama: pegawai, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nip char dengan constraint: wajib diisi, tidak boleh sama & 5 karakter
+nama varchar dengan constraint: wajib diisi dan maksimal 30 karakter
+gender enum('Laki-Laki','Perempuan') dengan constraint: wajib diisi
+tmp_lahir varchar dengan constraint: wajib diisi dan maksimal 30 karakter
+tgl_lahir date dengan constraint: wajib diisi
+iddivisi int sebagai foreign key, tidak boleh kosong, merujuk ke tabel divisi ke field id
+idjabatan int sebagai foreign key, tidak boleh kosong, merujuk ke tabel jabatan ke field id
+alamat text
+jawaban no 7 :
+MariaDB [dbpegawai]> CREATE TABLE pegawai (
+    ->     id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     nip CHAR(5) NOT NULL UNIQUE,
+    ->     nama VARCHAR(30) NOT NULL,
+    ->     gender ENUM('Laki-Laki', 'Perempuan') NOT NULL,
+    ->     tmp_lahir VARCHAR(30) NOT NULL,
+    ->     tgl_lahir DATE NOT NULL,
+    ->     iddivisi INT NOT NULL,
+    ->     idjabatan INT NOT NULL,
+    ->     alamat TEXT,
+    ->     FOREIGN KEY (iddivisi) REFERENCES divisi(id),
+    ->     FOREIGN KEY (idjabatan) REFERENCES jabatan(id)
+    -> );
+Query OK, 0 rows affected (0.017 sec)
+
+8 Tampilkan deskripsi tabel pegawai
+jawaban no 8 :
+MariaDB [dbpegawai]> desc pegawai;
++-----------+-------------------------------+------+-----+---------+----------------+
+| Field     | Type                          | Null | Key | Default | Extra          |
++-----------+-------------------------------+------+-----+---------+----------------+
+| id        | int(11)                       | NO   | PRI | NULL    | auto_increment |
+| nip       | char(5)                       | NO   | UNI | NULL    |                |
+| nama      | varchar(30)                   | NO   |     | NULL    |                |
+| gender    | enum('Laki-Laki','Perempuan') | NO   |     | NULL    |                |
+| tmp_lahir | varchar(30)                   | NO   |     | NULL    |                |
+| tgl_lahir | date                          | NO   |     | NULL    |                |
+| iddivisi  | int(11)                       | NO   | MUL | NULL    |                |
+| idjabatan | int(11)                       | NO   | MUL | NULL    |                |
+| alamat    | text                          | YES  |     | NULL    |                |
++-----------+-------------------------------+------+-----+---------+----------------+
+9 rows in set (0.005 sec)
+
+9 Tampilkan tabel-tabel yang ada di dbpegawai
+jawaban no 9 :
+MariaDB [dbpegawai]> show tables;
++---------------------+
+| Tables_in_dbpegawai |
++---------------------+
+| divisi              |
+| jabatan             |
+| jenis               |
+| pegawai             |
++---------------------+
+4 rows in set (0.001 sec)
+
+10 Input data divisi => SDM, Keuangan, Marketing, IT
+jawban no 10 :
+MariaDB [dbpegawai]> INSERT INTO divisi (nama) VALUES 
+    -> ('SDM'),
+    -> ('Keuangan'),
+    -> ('Marketing'),
+    -> ('IT');
+Query OK, 4 rows affected (0.012 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+11 Tampilkan seluruh data divisi
+jawaban no 11 :
+MariaDB [dbpegawai]> SELECT * FROM divisi;
++----+-----------+
+| id | nama      |
++----+-----------+
+|  4 | IT        |
+|  2 | Keuangan  |
+|  3 | Marketing |
+|  1 | SDM       |
++----+-----------+
+4 rows in set (0.005 sec)
+
+12 Input data jabatan => Direktur, Manajer, Asisten Manajer, Staff
+jawaban no 12 :
+MariaDB [dbpegawai]> insert into jabatan (nama) values ('DIREKTUR'), ('MANAJER'), ('ASISTEN MANAJER'), ('staff');
+Query OK, 4 rows affected (0.004 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+13 Tampilkan seluruh data jabatan
+jawaban no 13 :
+MariaDB [dbpegawai]> select * from jabatan;
++----+-----------------+
+| id | nama            |
++----+-----------------+
+|  3 | ASISTEN MANAJER |
+|  1 | DIREKTUR        |
+|  2 | MANAJER         |
+|  4 | staff           |
++----+-----------------+
+4 rows in set (0.001 sec)
+
+14 Input 20 orang pegawai ( 1 divisi 5 orang, untuk gender dan jabatan diacak)
+jawaban no 14 :	
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat)
+    -> VALUES
+    -> ('12345', 'Akira', 'Perempuan', 'jakarta', '2000-01-01', 1, 2, 'bogor'),
+    -> ('23456', 'Bella', 'Perempuan', 'medan', '2000-02-02', 1, 2, 'bekasi'),
+    -> ('34567', 'Dafne', 'Laki-Laki', 'sumatra', '2000-03-03', 1, 3, 'jaktim'),
+    -> ('45678', 'Erika', 'Laki-Laki', 'palembang', '2000-04-04', 1, 4, 'jakbar'),
+    -> ('56789', 'Fadil', 'Laki-Laki', 'padang', '2000-05-05', 1, 3, 'jakut'),
+    -> ('67890', 'Gisca', 'Laki-Laki', 'natuna', '2000-06-06', 2, 1, 'jaksel'),
+    -> ('78901', 'Hanna', 'Laki-Laki', 'jakarta', '2000-07-07', 2, 2, 'parung'),
+    -> ('89012', 'Ilham', 'Perempuan', 'tegal', '2000-08-08', 2, 3, 'bogor'),
+    -> ('90123', 'Jihan', 'Perempuan', 'cirebon', '2000-09-09', 2, 4, 'sukabumi'),
+    -> ('01234', 'Kiana', 'Perempuan', 'indramayu', '2000-10-10', 2, 4, 'bandung'),
+    -> ('98765', 'Kevin', 'Perempuan', 'wonogiri', '2000-11-11', 3, 1, 'cianjur'),
+    -> ('87654', 'Linda', 'Perempuan', 'bulak kapal', '2000-12-12', 3, 2, 'tasik'),
+    -> ('76543', 'Mario', 'Laki-Laki', 'malaysia', '2000-01-13', 3, 3, 'makasar'),
+    -> ('65432', 'Nanda', 'Laki-Laki', 'depok', '2000-02-14', 3, 4, 'manado'),
+    -> ('54321', 'Oscar', 'Laki-Laki', 'medan', '2000-03-15', 3, 2, 'komang'),
+    -> ('21098', 'Putri', 'Laki-Laki', 'bojong gede', '2000-04-16', 4, 1, 'jambi'),
+    -> ('32109', 'Rizky', 'Laki-Laki', 'tanjung pinang', '2000-05-17', 4, 2, 'palutungan'),
+    -> ('43210', 'Santi', 'Laki-Laki', 'jakarta', '2000-06-18', 4, 3, 'kaki gunung ciremai'),
+    -> ('56273', 'Tommy', 'Perempuan', 'pamijahan', '2000-07-19', 4, 4, 'keramat'),
+    -> ('63131', 'Vania', 'Laki-Laki', 'kelapa dua', '2000-08-20', 4, 3, 'tegal');
+Query OK, 20 rows affected (0.009 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+15 Tampilkan seluruh data pegawai
+jawban no 15 :
+MariaDB [dbpegawai]>  select * from pegawai;
++----+-------+-------+-----------+----------------+------------+----------+-----------+---------------------+
+| id | nip   | nama  | gender    | tmp_lahir      | tgl_lahir  | iddivisi | idjabatan | alamat              |
++----+-------+-------+-----------+----------------+------------+----------+-----------+---------------------+
+|  1 | 12345 | Akira | Perempuan | jakarta        | 2000-01-01 |        1 |         2 | bogor               |
+|  2 | 23456 | Bella | Perempuan | medan          | 2000-02-02 |        1 |         2 | bekasi              |
+|  3 | 34567 | Dafne | Laki-Laki | sumatra        | 2000-03-03 |        1 |         3 | jaktim              |
+|  4 | 45678 | Erika | Laki-Laki | palembang      | 2000-04-04 |        1 |         4 | jakbar              |
+|  5 | 56789 | Fadil | Laki-Laki | padang         | 2000-05-05 |        1 |         3 | jakut               |
+|  6 | 67890 | Gisca | Laki-Laki | natuna         | 2000-06-06 |        2 |         1 | jaksel              |
+|  7 | 78901 | Hanna | Laki-Laki | jakarta        | 2000-07-07 |        2 |         2 | parung              |
+|  8 | 89012 | Ilham | Perempuan | tegal          | 2000-08-08 |        2 |         3 | bogor               |
+|  9 | 90123 | Jihan | Perempuan | cirebon        | 2000-09-09 |        2 |         4 | sukabumi            |
+| 10 | 01234 | Kiana | Perempuan | indramayu      | 2000-10-10 |        2 |         4 | bandung             |
+| 11 | 98765 | Kevin | Perempuan | wonogiri       | 2000-11-11 |        3 |         1 | cianjur             |
+| 12 | 87654 | Linda | Perempuan | bulak kapal    | 2000-12-12 |        3 |         2 | tasik               |
+| 13 | 76543 | Mario | Laki-Laki | malaysia       | 2000-01-13 |        3 |         3 | makasar             |
+| 14 | 65432 | Nanda | Laki-Laki | depok          | 2000-02-14 |        3 |         4 | manado              |
+| 15 | 54321 | Oscar | Laki-Laki | medan          | 2000-03-15 |        3 |         2 | komang              |
+| 16 | 21098 | Putri | Laki-Laki | bojong gede    | 2000-04-16 |        4 |         1 | jambi               |
+| 17 | 32109 | Rizky | Laki-Laki | tanjung pinang | 2000-05-17 |        4 |         2 | palutungan          |
+| 18 | 43210 | Santi | Laki-Laki | jakarta        | 2000-06-18 |        4 |         3 | kaki gunung ciremai |
+| 19 | 56273 | Tommy | Perempuan | pamijahan      | 2000-07-19 |        4 |         4 | keramat             |
+| 20 | 63131 | Vania | Laki-Laki | kelapa dua     | 2000-08-20 |        4 |         3 | tegal               |
++----+-------+-------+-----------+----------------+------------+----------+-----------+---------------------+
+20 rows in set (0.002 sec)
+
+16 Ubah data 5 orang pegawai (dengan ketentuan ubah 3 kolom(bebas))
+jawban no 16 :
+MariaDB [dbpegawai]> -- Ubah data pegawai dengan NIP '12345'
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'John', gender = 'Laki-Laki', tmp_lahir = 'banjar'
+    -> WHERE nip = '12345';
+Query OK, 1 row affected (0.009 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> 
+MariaDB [dbpegawai]> -- Ubah data pegawai dengan NIP '23456'
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Alice', gender = 'Laki-Laki', tgl_lahir = '2003-04-05'
+    -> WHERE nip = '23456';
+Query OK, 1 row affected (0.001 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> 
+MariaDB [dbpegawai]> -- Ubah data pegawai dengan NIP '34567'
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Michelle', gender = 'Perempuan', tmp_lahir = 'pondok cabe'
+    -> WHERE nip = '34567';
+Query OK, 1 row affected (0.001 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> 
+MariaDB [dbpegawai]> -- Ubah data pegawai dengan NIP '45678'
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET alamat = 'sinta', idjabatan = 2, iddivisi = 2
+    -> WHERE nip = '45678';
+Query OK, 1 row affected (0.001 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> 
+MariaDB [dbpegawai]> -- Ubah data pegawai dengan NIP '56789'
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Michael', alamat = 'cilodong'
+    -> WHERE nip = '56789';
+Query OK, 1 row affected (0.002 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+17 Hapus 2 orang pegawai pegawai terakhir
+jawban no 17 :
+MariaDB [dbpegawai]> DELETE FROM pegawai WHERE id IN (
+    ->     SELECT id FROM (
+    ->         SELECT id FROM pegawai ORDER BY id DESC LIMIT 2
+    ->     ) AS temp
+    -> );
+Query OK, 2 rows affected (0.014 sec)
+
+18 Gunakan alter tabel pada tabel pegawai untuk menambahkan kolom baru berat_badan dengan
+tipe data float wajib diisi, lalu input berat badan semua pegawai secara acak
+jawaban no 18 :	
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> ADD COLUMN berat_badan FLOAT NOT NULL;
+Query OK, 0 rows affected (0.025 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = ROUND(RAND() * (100 - 50) + 50, 2);
+Query OK, 18 rows affected (0.009 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+
+19.Gunakan alter tabel pada tabel pegawai untuk menambahkan kolom baru umur dengan tipe data
+integer wajib diisi, lalu input umur semua pegawai secara acak.
+jawaban no 19 :
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> ADD COLUMN umur INT NOT NULL;
+Query OK, 0 rows affected (0.008 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET umur = FLOOR(RAND() * (60 - 20 + 1)) + 20;
+Query OK, 18 rows affected (0.005 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+
+20 Gunakan alter tabel pada tabel pegawai untuk mengubah nama kolom gender menjadi
+jenis_kelamin 
+jabawan no 20 :
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> CHANGE COLUMN gender jenis_kelamin ENUM('Laki-Laki', 'Perempuan') NOT NULL;
+Query OK, 0 rows affected (0.014 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+21 Tampilkan kolom2 tertentu di tabel pegawai (nip,nama,jenis_kelamin,alamat) 
+jawaban no 21 :
+MariaDB [dbpegawai]> SELECT nip, nama, jenis_kelamin, alamat
+    -> FROM pegawai;
++-------+----------+---------------+---------------------+
+| nip   | nama     | jenis_kelamin | alamat              |
++-------+----------+---------------+---------------------+
+| 12345 | John     | Laki-Laki     | bogor               |
+| 23456 | Alice    | Laki-Laki     | bekasi              |
+| 34567 | Michelle | Perempuan     | jaktim              |
+| 45678 | Erika    | Laki-Laki     | sinta               |
+| 56789 | Michael  | Laki-Laki     | cilodong            |
+| 67890 | Gisca    | Laki-Laki     | jaksel              |
+| 78901 | Hanna    | Laki-Laki     | parung              |
+| 89012 | Ilham    | Perempuan     | bogor               |
+| 90123 | Jihan    | Perempuan     | sukabumi            |
+| 01234 | Kiana    | Perempuan     | bandung             |
+| 98765 | Kevin    | Perempuan     | cianjur             |
+| 87654 | Linda    | Perempuan     | tasik               |
+| 76543 | Mario    | Laki-Laki     | makasar             |
+| 65432 | Nanda    | Laki-Laki     | manado              |
+| 54321 | Oscar    | Laki-Laki     | komang              |
+| 21098 | Putri    | Laki-Laki     | jambi               |
+| 32109 | Rizky    | Laki-Laki     | palutungan          |
+| 43210 | Santi    | Laki-Laki     | kaki gunung ciremai |
++-------+----------+---------------+---------------------+
+18 rows in set (0.002 sec)
+
+22 Tampilkan baris2 tertentu di tabel pegawai (yang gendernya laki2 saja) 
+jabwan no 22 :
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> WHERE jenis_kelamin = 'Laki-Laki';
++----+-------+---------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+| id | nip   | nama    | jenis_kelamin | tmp_lahir      | tgl_lahir  | iddivisi | idjabatan | alamat              | berat_badan | umur |
++----+-------+---------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+|  1 | 12345 | John    | Laki-Laki     | banjar         | 2000-01-01 |        1 |         2 | bogor               |       93.76 |   37 |
+|  2 | 23456 | Alice   | Laki-Laki     | medan          | 2003-04-05 |        1 |         2 | bekasi              |        52.8 |   40 |
+|  4 | 45678 | Erika   | Laki-Laki     | palembang      | 2000-04-04 |        2 |         2 | sinta               |       55.28 |   46 |
+|  5 | 56789 | Michael | Laki-Laki     | padang         | 2000-05-05 |        1 |         3 | cilodong            |       78.19 |   44 |
+|  6 | 67890 | Gisca   | Laki-Laki     | natuna         | 2000-06-06 |        2 |         1 | jaksel              |       75.11 |   23 |
+|  7 | 78901 | Hanna   | Laki-Laki     | jakarta        | 2000-07-07 |        2 |         2 | parung              |       90.96 |   43 |
+| 13 | 76543 | Mario   | Laki-Laki     | malaysia       | 2000-01-13 |        3 |         3 | makasar             |        94.4 |   43 |
+| 14 | 65432 | Nanda   | Laki-Laki     | depok          | 2000-02-14 |        3 |         4 | manado              |       58.64 |   37 |
+| 15 | 54321 | Oscar   | Laki-Laki     | medan          | 2000-03-15 |        3 |         2 | komang              |       59.99 |   35 |
+| 16 | 21098 | Putri   | Laki-Laki     | bojong gede    | 2000-04-16 |        4 |         1 | jambi               |       74.01 |   44 |
+| 17 | 32109 | Rizky   | Laki-Laki     | tanjung pinang | 2000-05-17 |        4 |         2 | palutungan          |       90.11 |   58 |
+| 18 | 43210 | Santi   | Laki-Laki     | jakarta        | 2000-06-18 |        4 |         3 | kaki gunung ciremai |       78.52 |   56 |
++----+-------+---------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+12 rows in set (0.003 sec)
+
+23 Tampilkan baris2 tertentu di tabel pegawai (yang bekerja di divisi IT dan gendernya perempuan) 
+jabwan no 23 :
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> WHERE iddivisi = 4 AND jenis_kelamin = 'Perempuan';
+Empty set (0.011 sec) (kosong) 
+
+24 Tampilkan data pegawai yang umurnya di atas 30 tahun dan lahirnya di kota jakarta dengan
+klausa WHERE, AND 
+jawaban no 24 :
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> WHERE umur > 30
+    -> AND tmp_lahir = 'jakarta';
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat              | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+|  7 | 78901 | Hanna | Laki-Laki     | jakarta   | 2000-07-07 |        2 |         2 | parung              |       90.96 |   43 |
+| 18 | 43210 | Santi | Laki-Laki     | jakarta   | 2000-06-18 |        4 |         3 | kaki gunung ciremai |       78.52 |   56 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+2 rows in set (0.001 sec)
+
+25 Tampilkan data pegawai yang bekerja pada divisi marketing, berumur lebih dari 30 tahun dan
+berjenis kelamin perempuan dengan klausa WHERE, AND 
+jawaban no 25 :
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> WHERE iddivisi = (SELECT id FROM divisi WHERE nama = 'Marketing')
+    -> AND umur > 30
+    -> AND jenis_kelamin = 'Perempuan';
++----+-------+-------+---------------+-------------+------------+----------+-----------+---------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir   | tgl_lahir  | iddivisi | idjabatan | alamat  | berat_badan | umur |
++----+-------+-------+---------------+-------------+------------+----------+-----------+---------+-------------+------+
+| 11 | 98765 | Kevin | Perempuan     | wonogiri    | 2000-11-11 |        3 |         1 | cianjur |       98.19 |   41 |
+| 12 | 87654 | Linda | Perempuan     | bulak kapal | 2000-12-12 |        3 |         2 | tasik   |       87.79 |   53 |
++----+-------+-------+---------------+-------------+------------+----------+-----------+---------+-------------+------+
+2 rows in set (0.002 sec)
+
+26 Tampilkan data pegawai dengan klausa key (nip) 
+jawaban no 26 :
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> ORDER BY nip;
++----+-------+----------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+| id | nip   | nama     | jenis_kelamin | tmp_lahir      | tgl_lahir  | iddivisi | idjabatan | alamat              | berat_badan | umur |
++----+-------+----------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+| 10 | 01234 | Kiana    | Perempuan     | indramayu      | 2000-10-10 |        2 |         4 | bandung             |       84.38 |   44 |
+|  1 | 12345 | John     | Laki-Laki     | banjar         | 2000-01-01 |        1 |         2 | bogor               |       93.76 |   37 |
+| 16 | 21098 | Putri    | Laki-Laki     | bojong gede    | 2000-04-16 |        4 |         1 | jambi               |       74.01 |   44 |
+|  2 | 23456 | Alice    | Laki-Laki     | medan          | 2003-04-05 |        1 |         2 | bekasi              |        52.8 |   40 |
+| 17 | 32109 | Rizky    | Laki-Laki     | tanjung pinang | 2000-05-17 |        4 |         2 | palutungan          |       90.11 |   58 |
+|  3 | 34567 | Michelle | Perempuan     | pondok cabe    | 2000-03-03 |        1 |         3 | jaktim              |       82.74 |   29 |
+| 18 | 43210 | Santi    | Laki-Laki     | jakarta        | 2000-06-18 |        4 |         3 | kaki gunung ciremai |       78.52 |   56 |
+|  4 | 45678 | Erika    | Laki-Laki     | palembang      | 2000-04-04 |        2 |         2 | sinta               |       55.28 |   46 |
+| 15 | 54321 | Oscar    | Laki-Laki     | medan          | 2000-03-15 |        3 |         2 | komang              |       59.99 |   35 |
+|  5 | 56789 | Michael  | Laki-Laki     | padang         | 2000-05-05 |        1 |         3 | cilodong            |       78.19 |   44 |
+| 14 | 65432 | Nanda    | Laki-Laki     | depok          | 2000-02-14 |        3 |         4 | manado              |       58.64 |   37 |
+|  6 | 67890 | Gisca    | Laki-Laki     | natuna         | 2000-06-06 |        2 |         1 | jaksel              |       75.11 |   23 |
+| 13 | 76543 | Mario    | Laki-Laki     | malaysia       | 2000-01-13 |        3 |         3 | makasar             |        94.4 |   43 |
+|  7 | 78901 | Hanna    | Laki-Laki     | jakarta        | 2000-07-07 |        2 |         2 | parung              |       90.96 |   43 |
+| 12 | 87654 | Linda    | Perempuan     | bulak kapal    | 2000-12-12 |        3 |         2 | tasik               |       87.79 |   53 |
+|  8 | 89012 | Ilham    | Perempuan     | tegal          | 2000-08-08 |        2 |         3 | bogor               |       79.49 |   46 |
+|  9 | 90123 | Jihan    | Perempuan     | cirebon        | 2000-09-09 |        2 |         4 | sukabumi            |       74.57 |   40 |
+| 11 | 98765 | Kevin    | Perempuan     | wonogiri       | 2000-11-11 |        3 |         1 | cianjur             |       98.19 |   41 |
++----+-------+----------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+18 rows in set (0.005 sec)
+
+
+27 Tampilkan data pegawai dengan klausa non key (gender) 
+jawaban no 27 :
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> WHERE jenis_kelamin = 'Perempuan';
++----+-------+----------+---------------+-------------+------------+----------+-----------+----------+-------------+------+
+| id | nip   | nama     | jenis_kelamin | tmp_lahir   | tgl_lahir  | iddivisi | idjabatan | alamat   | berat_badan | umur |
++----+-------+----------+---------------+-------------+------------+----------+-----------+----------+-------------+------+
+|  3 | 34567 | Michelle | Perempuan     | pondok cabe | 2000-03-03 |        1 |         3 | jaktim   |       82.74 |   29 |
+|  8 | 89012 | Ilham    | Perempuan     | tegal       | 2000-08-08 |        2 |         3 | bogor    |       79.49 |   46 |
+|  9 | 90123 | Jihan    | Perempuan     | cirebon     | 2000-09-09 |        2 |         4 | sukabumi |       74.57 |   40 |
+| 10 | 01234 | Kiana    | Perempuan     | indramayu   | 2000-10-10 |        2 |         4 | bandung  |       84.38 |   44 |
+| 11 | 98765 | Kevin    | Perempuan     | wonogiri    | 2000-11-11 |        3 |         1 | cianjur  |       98.19 |   41 |
+| 12 | 87654 | Linda    | Perempuan     | bulak kapal | 2000-12-12 |        3 |         2 | tasik    |       87.79 |   53 |
++----+-------+----------+---------------+-------------+------------+----------+-----------+----------+-------------+------+
+6 rows in set (0.002 sec)
+
+28 Tampilkan data pegawai dengan klausa in (menyebutkan beberapa nip) 
+jawabaan no 28 :
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> WHERE nip IN ('12345', '23456', '34567');
++----+-------+----------+---------------+-------------+------------+----------+-----------+--------+-------------+------+
+| id | nip   | nama     | jenis_kelamin | tmp_lahir   | tgl_lahir  | iddivisi | idjabatan | alamat | berat_badan | umur |
++----+-------+----------+---------------+-------------+------------+----------+-----------+--------+-------------+------+
+|  1 | 12345 | John     | Laki-Laki     | banjar      | 2000-01-01 |        1 |         2 | bogor  |       93.76 |   37 |
+|  2 | 23456 | Alice    | Laki-Laki     | medan       | 2003-04-05 |        1 |         2 | bekasi |        52.8 |   40 |
+|  3 | 34567 | Michelle | Perempuan     | pondok cabe | 2000-03-03 |        1 |         3 | jaktim |       82.74 |   29 |
++----+-------+----------+---------------+-------------+------------+----------+-----------+--------+-------------+------+
+3 rows in set (0.002 sec)
+
+29 Tampilkan data pegawai dengan klausa not in (menyebutkan beberapa tempat lahir) 
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> WHERE tmp_lahir NOT IN ('Jakarta', 'Bandung', 'Surabaya');
++----+-------+----------+---------------+----------------+------------+----------+-----------+------------+-------------+------+
+| id | nip   | nama     | jenis_kelamin | tmp_lahir      | tgl_lahir  | iddivisi | idjabatan | alamat     | berat_badan | umur |
++----+-------+----------+---------------+----------------+------------+----------+-----------+------------+-------------+------+
+|  1 | 12345 | John     | Laki-Laki     | banjar         | 2000-01-01 |        1 |         2 | bogor      |       93.76 |   37 |
+|  2 | 23456 | Alice    | Laki-Laki     | medan          | 2003-04-05 |        1 |         2 | bekasi     |        52.8 |   40 |
+|  3 | 34567 | Michelle | Perempuan     | pondok cabe    | 2000-03-03 |        1 |         3 | jaktim     |       82.74 |   29 |
+|  4 | 45678 | Erika    | Laki-Laki     | palembang      | 2000-04-04 |        2 |         2 | sinta      |       55.28 |   46 |
+|  5 | 56789 | Michael  | Laki-Laki     | padang         | 2000-05-05 |        1 |         3 | cilodong   |       78.19 |   44 |
+|  6 | 67890 | Gisca    | Laki-Laki     | natuna         | 2000-06-06 |        2 |         1 | jaksel     |       75.11 |   23 |
+|  8 | 89012 | Ilham    | Perempuan     | tegal          | 2000-08-08 |        2 |         3 | bogor      |       79.49 |   46 |
+|  9 | 90123 | Jihan    | Perempuan     | cirebon        | 2000-09-09 |        2 |         4 | sukabumi   |       74.57 |   40 |
+| 10 | 01234 | Kiana    | Perempuan     | indramayu      | 2000-10-10 |        2 |         4 | bandung    |       84.38 |   44 |
+| 11 | 98765 | Kevin    | Perempuan     | wonogiri       | 2000-11-11 |        3 |         1 | cianjur    |       98.19 |   41 |
+| 12 | 87654 | Linda    | Perempuan     | bulak kapal    | 2000-12-12 |        3 |         2 | tasik      |       87.79 |   53 |
+| 13 | 76543 | Mario    | Laki-Laki     | malaysia       | 2000-01-13 |        3 |         3 | makasar    |        94.4 |   43 |
+| 14 | 65432 | Nanda    | Laki-Laki     | depok          | 2000-02-14 |        3 |         4 | manado     |       58.64 |   37 |
+| 15 | 54321 | Oscar    | Laki-Laki     | medan          | 2000-03-15 |        3 |         2 | komang     |       59.99 |   35 |
+| 16 | 21098 | Putri    | Laki-Laki     | bojong gede    | 2000-04-16 |        4 |         1 | jambi      |       74.01 |   44 |
+| 17 | 32109 | Rizky    | Laki-Laki     | tanjung pinang | 2000-05-17 |        4 |         2 | palutungan |       90.11 |   58 |
++----+-------+----------+---------------+----------------+------------+----------+-----------+------------+-------------+------+
+16 rows in set (0.001 sec)
+
+30 Tampilkan data pegawai berdasarkan nama secara ascending 
+jawaban no 30 :
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> ORDER BY nama ASC;
++----+-------+----------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+| id | nip   | nama     | jenis_kelamin | tmp_lahir      | tgl_lahir  | iddivisi | idjabatan | alamat              | berat_badan | umur |
++----+-------+----------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+|  2 | 23456 | Alice    | Laki-Laki     | medan          | 2003-04-05 |        1 |         2 | bekasi              |        52.8 |   40 |
+|  4 | 45678 | Erika    | Laki-Laki     | palembang      | 2000-04-04 |        2 |         2 | sinta               |       55.28 |   46 |
+|  6 | 67890 | Gisca    | Laki-Laki     | natuna         | 2000-06-06 |        2 |         1 | jaksel              |       75.11 |   23 |
+|  7 | 78901 | Hanna    | Laki-Laki     | jakarta        | 2000-07-07 |        2 |         2 | parung              |       90.96 |   43 |
+|  8 | 89012 | Ilham    | Perempuan     | tegal          | 2000-08-08 |        2 |         3 | bogor               |       79.49 |   46 |
+|  9 | 90123 | Jihan    | Perempuan     | cirebon        | 2000-09-09 |        2 |         4 | sukabumi            |       74.57 |   40 |
+|  1 | 12345 | John     | Laki-Laki     | banjar         | 2000-01-01 |        1 |         2 | bogor               |       93.76 |   37 |
+| 11 | 98765 | Kevin    | Perempuan     | wonogiri       | 2000-11-11 |        3 |         1 | cianjur             |       98.19 |   41 |
+| 10 | 01234 | Kiana    | Perempuan     | indramayu      | 2000-10-10 |        2 |         4 | bandung             |       84.38 |   44 |
+| 12 | 87654 | Linda    | Perempuan     | bulak kapal    | 2000-12-12 |        3 |         2 | tasik               |       87.79 |   53 |
+| 13 | 76543 | Mario    | Laki-Laki     | malaysia       | 2000-01-13 |        3 |         3 | makasar             |        94.4 |   43 |
+|  5 | 56789 | Michael  | Laki-Laki     | padang         | 2000-05-05 |        1 |         3 | cilodong            |       78.19 |   44 |
+|  3 | 34567 | Michelle | Perempuan     | pondok cabe    | 2000-03-03 |        1 |         3 | jaktim              |       82.74 |   29 |
+| 14 | 65432 | Nanda    | Laki-Laki     | depok          | 2000-02-14 |        3 |         4 | manado              |       58.64 |   37 |
+| 15 | 54321 | Oscar    | Laki-Laki     | medan          | 2000-03-15 |        3 |         2 | komang              |       59.99 |   35 |
+| 16 | 21098 | Putri    | Laki-Laki     | bojong gede    | 2000-04-16 |        4 |         1 | jambi               |       74.01 |   44 |
+| 17 | 32109 | Rizky    | Laki-Laki     | tanjung pinang | 2000-05-17 |        4 |         2 | palutungan          |       90.11 |   58 |
+| 18 | 43210 | Santi    | Laki-Laki     | jakarta        | 2000-06-18 |        4 |         3 | kaki gunung ciremai |       78.52 |   56 |
++----+-------+----------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+18 rows in set (0.003 sec)
+
+31 Tampilkan data pegawai dari yang berat badan paling gemuk ke paling kurus 
+jawaban no 31 :
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> ORDER BY berat_badan DESC;
++----+-------+----------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+| id | nip   | nama     | jenis_kelamin | tmp_lahir      | tgl_lahir  | iddivisi | idjabatan | alamat              | berat_badan | umur |
++----+-------+----------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+| 11 | 98765 | Kevin    | Perempuan     | wonogiri       | 2000-11-11 |        3 |         1 | cianjur             |       98.19 |   41 |
+| 13 | 76543 | Mario    | Laki-Laki     | malaysia       | 2000-01-13 |        3 |         3 | makasar             |        94.4 |   43 |
+|  1 | 12345 | John     | Laki-Laki     | banjar         | 2000-01-01 |        1 |         2 | bogor               |       93.76 |   37 |
+|  7 | 78901 | Hanna    | Laki-Laki     | jakarta        | 2000-07-07 |        2 |         2 | parung              |       90.96 |   43 |
+| 17 | 32109 | Rizky    | Laki-Laki     | tanjung pinang | 2000-05-17 |        4 |         2 | palutungan          |       90.11 |   58 |
+| 12 | 87654 | Linda    | Perempuan     | bulak kapal    | 2000-12-12 |        3 |         2 | tasik               |       87.79 |   53 |
+| 10 | 01234 | Kiana    | Perempuan     | indramayu      | 2000-10-10 |        2 |         4 | bandung             |       84.38 |   44 |
+|  3 | 34567 | Michelle | Perempuan     | pondok cabe    | 2000-03-03 |        1 |         3 | jaktim              |       82.74 |   29 |
+|  8 | 89012 | Ilham    | Perempuan     | tegal          | 2000-08-08 |        2 |         3 | bogor               |       79.49 |   46 |
+| 18 | 43210 | Santi    | Laki-Laki     | jakarta        | 2000-06-18 |        4 |         3 | kaki gunung ciremai |       78.52 |   56 |
+|  5 | 56789 | Michael  | Laki-Laki     | padang         | 2000-05-05 |        1 |         3 | cilodong            |       78.19 |   44 |
+|  6 | 67890 | Gisca    | Laki-Laki     | natuna         | 2000-06-06 |        2 |         1 | jaksel              |       75.11 |   23 |
+|  9 | 90123 | Jihan    | Perempuan     | cirebon        | 2000-09-09 |        2 |         4 | sukabumi            |       74.57 |   40 |
+| 16 | 21098 | Putri    | Laki-Laki     | bojong gede    | 2000-04-16 |        4 |         1 | jambi               |       74.01 |   44 |
+| 15 | 54321 | Oscar    | Laki-Laki     | medan          | 2000-03-15 |        3 |         2 | komang              |       59.99 |   35 |
+| 14 | 65432 | Nanda    | Laki-Laki     | depok          | 2000-02-14 |        3 |         4 | manado              |       58.64 |   37 |
+|  4 | 45678 | Erika    | Laki-Laki     | palembang      | 2000-04-04 |        2 |         2 | sinta               |       55.28 |   46 |
+|  2 | 23456 | Alice    | Laki-Laki     | medan          | 2003-04-05 |        1 |         2 | bekasi              |        52.8 |   40 |
++----+-------+----------+---------------+----------------+------------+----------+-----------+---------------------+-------------+------+
+18 rows in set (0.002 sec)
+
+32 Tampilkan data 5 pegawai teratas gunakan klausa limit 
+jawaban no 32 :
+
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> ORDER BY berat_badan DESC
+    -> LIMIT 5;
++----+-------+-------+---------------+----------------+------------+----------+-----------+------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir      | tgl_lahir  | iddivisi | idjabatan | alamat     | berat_badan | umur |
++----+-------+-------+---------------+----------------+------------+----------+-----------+------------+-------------+------+
+| 11 | 98765 | Kevin | Perempuan     | wonogiri       | 2000-11-11 |        3 |         1 | cianjur    |       98.19 |   41 |
+| 13 | 76543 | Mario | Laki-Laki     | malaysia       | 2000-01-13 |        3 |         3 | makasar    |        94.4 |   43 |
+|  1 | 12345 | John  | Laki-Laki     | banjar         | 2000-01-01 |        1 |         2 | bogor      |       93.76 |   37 |
+|  7 | 78901 | Hanna | Laki-Laki     | jakarta        | 2000-07-07 |        2 |         2 | parung     |       90.96 |   43 |
+| 17 | 32109 | Rizky | Laki-Laki     | tanjung pinang | 2000-05-17 |        4 |         2 | palutungan |       90.11 |   58 |
++----+-------+-------+---------------+----------------+------------+----------+-----------+------------+-------------+------+
+5 rows in set (0.002 sec)
+
+33 Tampilkan data 5 pegawai terbawah gunakan klausa limit offset 
+jawaban no 33 :
+MariaDB [dbpegawai]> SELECT *
+    -> FROM pegawai
+    -> ORDER BY berat_badan DESC
+    -> LIMIT 5 OFFSET 13;
++----+-------+-------+---------------+-------------+------------+----------+-----------+--------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir   | tgl_lahir  | iddivisi | idjabatan | alamat | berat_badan | umur |
++----+-------+-------+---------------+-------------+------------+----------+-----------+--------+-------------+------+
+| 16 | 21098 | Putri | Laki-Laki     | bojong gede | 2000-04-16 |        4 |         1 | jambi  |       74.01 |   44 |
+| 15 | 54321 | Oscar | Laki-Laki     | medan       | 2000-03-15 |        3 |         2 | komang |       59.99 |   35 |
+| 14 | 65432 | Nanda | Laki-Laki     | depok       | 2000-02-14 |        3 |         4 | manado |       58.64 |   37 |
+|  4 | 45678 | Erika | Laki-Laki     | palembang   | 2000-04-04 |        2 |         2 | sinta  |       55.28 |   46 |
+|  2 | 23456 | Alice | Laki-Laki     | medan       | 2003-04-05 |        1 |         2 | bekasi |        52.8 |   40 |
++----+-------+-------+---------------+-------------+------------+----------+-----------+--------+-------------+------+
+5 rows in set (0.006 sec)
+
+34 Tampilkan jumlah pegawai gunakan fungsi aggregrat count 
+jawaban no 34 :
+MariaDB [dbpegawai]> select count(*) as jumlah_pegawai from pegawai;
++----------------+
+| jumlah_pegawai |
++----------------+
+|             18 |
++----------------+
+1 row in set (0.004 sec)
+
+35 Tampilkan nip,nama pegawai, umur yg paling tua gunakan fungsi aggregrat max (kombinasi
+dengan sub query) 
+jawaban no 35 :
+MariaDB [dbpegawai]> select nip, nama, umur  from pegawai  where umur = (select max(umur) from pegawai);
++-------+-------+------+
+| nip   | nama  | umur |
++-------+-------+------+
+| 01234 | rizky |   58 |
++-------+-------+------+
+1 row in set (0.007 sec)
+
+36 Tampilkan nip,nama pegawai, berat_badan yg paling kurus gunakan fungsi aggregrat min
+(kombinasi dengan sub query) 
+jawaban no 36 :
+MariaDB [dbpegawai]> select nip, nama, berat_badan
+    -> from pegawai
+    -> where berat_badan = (select min(berat_badan) from pegawai);
++-------+--------+-------------+
+| nip   | nama   | berat_badan |
++-------+--------+-------------+
+| 98765 | kevin  |       55.94 |
++-------+--------+-------------+
+1 row in set (0.006 sec)
+
+37 Tampilkan data rata2 umur pegawai gunakan fungsi aggregrat avg 
+jawaban no 37 :
+MariaDB [dbpegawai]> SELECT AVG(umur) AS rata_rata_umur
+    -> FROM pegawai;
++----------------+
+| rata_rata_umur |
++----------------+
+|           38.4 |
++----------------+
+1 row in set (0.003 sec)
+
+38 Tampilkan jumlah data pegawai yang laki2 dan berumur lebih dari 40 tahun dan berjabatan
+Manajer, gunakan fungsi aggregrat count dan klausa AND 
+jawaban no 38 :
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai_manajer FROM pegawai WHERE jenis_kelamin = 'Laki-Laki' AND umur > 40 AND idjabatan = 2;
++------------------------+
+| jumlah_pegawai_manajer |
++------------------------+
+|                      3 |
++------------------------+
+1 row in set (0.014 sec)
+
+39 Tampilkan jumlah data pegawai yang perempuan dan berumur kurang dari 40 tahun dan
+berjabatan Staff, gunakan fungsi aggregrat count dan klausa AND 
+jawaban no 39 :
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai_SATAFF FROM pegawai WHERE jenis_kelamin = 'Perempuan' AND umur < 40 AND idjabatan = 4;
++-----------------------+
+| jumlah_pegawai_SATAFF |
++-----------------------+
+|                     0 |
++-----------------------+
+1 row in set (0.005 sec)
+
+40 Tampilkan jumlah data pegawai yang perempuan gunakan fungsi aggregrat count 
+jawaban no 40 :
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai_perempuan
+    -> FROM pegawai
+    -> WHERE jenis_kelamin = 'perempuan';
++--------------------------+
+| jumlah_pegawai_perempuan |
++--------------------------+
+|                        6 |
++--------------------------+
+1 row in set (0.002 sec)
+
+41 Tampilkan jumlah pegawai yang bekerja di divisi SDM dengan fungsi aggregrat sum dan klausa
+WHERE 
+jawaban no 41 :
+MariaDB [dbpegawai]> select sum(1) as jumlah_pegawai_sdm from pegawai
+    -> where iddivisi=1;
++--------------------+
+| jumlah_pegawai_sdm |
++--------------------+
+|                  3 |
++--------------------+
+1 row in set (0.049 sec)
+
+42 Tampilkan jumlah pegawai berdasarkan divisi masing2 menggunakan fungsi aggregrat count
+dan klausa group by 
+jawaban no 42 :
+MariaDB [dbpegawai]> select iddivisi, count(*) as jumlah_pegawai from pegawai group by iddivisi;
++----------+----------------+
+| iddivisi | jumlah_pegawai |
++----------+----------------+
+|        1 |              3 |
+|        2 |              7 |
+|        3 |              5 |
+|        4 |              3 |
++----------+----------------+
+4 rows in set (0.004 sec)
+
+
+43 Tampilkan data jumlah pegawai berdasarkan gender, yg jumlah minimal 10 orang (gunakan
+group by dan having) 
+jawaban no 43 :
+MariaDB [dbpegawai]> select jenis_kelamin, count(*) as jumlah_pegawai from pegawai
+    -> group by jenis_kelamin having count(*) >= 10;
++---------------+----------------+
+| jenis_kelamin | jumlah_pegawai |
++---------------+----------------+
+| Laki-Laki     |             12 |
++---------------+----------------+
+1 row in set (0.008 sec)
+
+44 Cari data pegawai yang berawalan kata Muhammad
+jawaban no 44 :
+MariaDB [dbpegawai]>  select nama from pegawai where nama like 'Muhammad%';
++-----------------+
+| nama            |
++-----------------+
+| muhammad ilhamu |
+| muhammad alice  |
++-----------------+
+2 rows in set (0.007 sec)
+
+45 Cari data pegawai yang berakhiran kata Santoso 
+jawaban no 45 :
+MariaDB [dbpegawai]> select nama from pegawai where nama like '%Santoso';
++---------------+
+| nama          |
++---------------+
+| ichel santoso |
++---------------+
+1 row in set (0.002 sec)
+
+46 Cari data pegawai yang mengadung kata Asep 
+jawban no 46 :
+MariaDB [dbpegawai]>  select nama from pegawai where nama like '%Asep%';
++------------+
+| nama       |
++------------+
+| osca rival |
++------------+
+1 row in set (0.002 sec)
+47 Cari data pegawai yang huruf kelimanya huruf 
+jawaban no 47 
+MariaDB [dbpegawai]> select nama from pegawai where nama like '____s';
+Empty set (0.002 sec)
